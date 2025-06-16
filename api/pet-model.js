@@ -1,60 +1,62 @@
-let id = 0
+const server = require("./server");
+
+let id = 0;
 
 function getId() {
-  return ++id
+    return ++id;
 }
 
 let pets = [
-  { id: getId(), age: 3, name: "Luna", type: "dog", adopted: false },
-  { id: getId(), age: 2, name: "Milo", type: "cat", adopted: false },
-  { id: getId(), age: 1, name: "Bubbles", type: "fish", adopted: false },
-  { id: getId(), age: 5, name: "Coco", type: "parrot", adopted: false },
-  { id: getId(), age: 15, name: "Bicho", type: "dog", adopted: true }
-]
+    { id: getId(), age: 3, name: "Luna", type: "dog", adopted: false },
+    { id: getId(), age: 2, name: "Milo", type: "cat", adopted: false },
+    { id: getId(), age: 1, name: "Bubbles", type: "fish", adopted: false },
+    { id: getId(), age: 5, name: "Coco", type: "parrot", adopted: false },
+    { id: getId(), age: 15, name: "Bicho", type: "dog", adopted: true },
+];
 
 module.exports = {
-  async find(search) {
-    // SELECT * FROM "Pet" WHERE type = 'fish';
-    let resultSet = [...pets]
-    if (search.type) {
-      resultSet = resultSet.filter(pet => pet.type === search.type)
-    }
-    if (search.adopted === 'true') {
-      resultSet = resultSet.filter(pet => pet.adopted === true)
-    } else if (search.adopted === 'false') {
-      resultSet = resultSet.filter(pet => pet.adopted === false)
-    }
-    return resultSet
-  },
+    async find(search) {
+        // SELECT * FROM "Pet" WHERE type = 'fish';
+        let resultSet = [...pets];
+        if (search.type) {
+            resultSet = resultSet.filter((pet) => pet.type === search.type);
+        }
+        if (search.adopted === "true") {
+            resultSet = resultSet.filter((pet) => pet.adopted === true);
+        } else if (search.adopted === "false") {
+            resultSet = resultSet.filter((pet) => pet.adopted === false);
+        }
+        return resultSet;
+    },
 
-  async findById(id) {
-    // SELECT * FROM "Pet" WHERE id = 1
-    return pets.find(p => p.id == id)
-  },
+    async findById(id) {
+        // SELECT * FROM "Pet" WHERE id = 1
+        return pets.find((p) => p.id == id);
+    },
 
-  async create({ name, type, age }) {
-    // INSERT INTO "Pet" (name, type, age) VALUES (...)
-    const newPet = { id: getId(), name, type, age }
-    pets.push(newPet)
-    return newPet
-  },
+    async create({ name, type, age }) {
+        // INSERT INTO "Pet" (name, type, age) VALUES (...)
+        const newPet = { id: getId(), name, type, age };
+        pets.push(newPet);
+        return newPet;
+    },
 
-  async update(id, changes) {
-    // UPDATE "Pet" SET ... WHERE id = 1
-    const pet = pets.find(p => p.id == id)
-    if (!pet) return null
+    async update(id, changes) {
+        // UPDATE "Pet" SET ... WHERE id = 1
+        const pet = pets.find((p) => p.id == id);
+        if (!pet) return null;
 
-    const updatedPet = { ...pet, ...changes }
-    pets = pets.map(p => (p.id == id ? updatedPet : p))
-    return updatedPet
-  },
+        const updatedPet = { ...pet, ...changes };
+        pets = pets.map((p) => (p.id == id ? updatedPet : p));
+        return updatedPet;
+    },
 
-  async delete(id) {
-    // DELETE FROM "Pet" WHERE id = 1
-    const pet = pets.find(p => p.id == id)
-    if (!pet) return null
+    async delete(id) {
+        // DELETE FROM "Pet" WHERE id = 1
+        const pet = pets.find((p) => p.id == id);
+        if (!pet) return null;
 
-    pets = pets.filter(p => p.id != id)
-    return pet
-  },
-}
+        pets = pets.filter((p) => p.id != id);
+        return pet;
+    },
+};
